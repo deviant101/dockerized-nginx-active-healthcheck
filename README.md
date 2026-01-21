@@ -122,7 +122,7 @@ Each backend server needs:
 1. A web server (NGINX, Apache, Node.js, etc.)
 2. A `/health` endpoint that returns HTTP 200
 
-### Option A: NGINX Backend (Recommended)
+### NGINX Backend
 
 **1. Install NGINX** (if not already installed):
 
@@ -186,6 +186,28 @@ curl http://localhost/health
 
 **4. Verify from Load Balancer**
 
+Quick Verification Commands
+
+```bash
+# 1. Check container status
+docker ps
+
+# 2. Check NGINX status endpoint
+curl http://<nginx-lb-ip>:8080/nginx_status
+
+# 3. Check health check status page
+curl http://<nginx-lb-ip>/upstream_check
+
+# 4. Test main endpoint (will fail until backends are configured)
+curl http://<nginx-lb-ip>
+
+# 5. View container logs
+docker logs nginx-active-health-check
+
+# 6. Check NGINX configuration syntax
+docker exec nginx-active-health-check nginx -t
+```
+
 From your load balancer machine:
 
 ```bash
@@ -195,69 +217,6 @@ curl http://BACKEND1_IP/health
 # Test connectivity to Backend 2  
 curl http://BACKEND2_IP/health
 ```
-
-### Option B: Node.js/Express Backend
-
-```javascript
-const express = require('express');
-const app = express();
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).send('healthy');
-});
-
-// Your application routes
-app.get('/', (req, res) => {
-  res.send(`Backend Server: ${require('os').hostname()}`);
-});
-
-app.listen(80, () => {
-  console.log('Server running on port 80');
-});
-```
-
-### Option C: Python/Flask Backend
-
-```python
-from flask import Flask
-import socket
-
-app = Flask(__name__)
-
-@app.route('/health')
-def health():
-    return 'healthy', 200
-
-@app.route('/')
-def index():
-    hostname = socket.gethostname()
-    return f'Backend Server: {hostname}', 200
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
-```
-
-### Option D: Apache Backend
-
-**1. Install Apache**:
-
-```bash
-sudo apt install apache2 -y
-```
-
-**2. Create health endpoint**:
-
-```bash
-echo "healthy" | sudo tee /var/www/html/health
-```
-
-**3. Restart Apache**:
-
-```bash
-sudo systemctl restart apache2
-```
-
 ---
 
 ## 🧪 Part 3: Testing
