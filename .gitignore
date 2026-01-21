@@ -1,0 +1,24 @@
+# Deployment artifacts
+deployment/
+logs/
+*.bak
+
+# Terraform
+vms/.terraform/
+vms/terraform.tfstate
+vms/terraform.tfstate.backup
+vms/.terraform.lock.hcl
+vms/terraform.tfvars
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

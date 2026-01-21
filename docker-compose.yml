@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  nginx-lb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nginx-active-health-check
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./logs:/var/log/nginx
+    restart: unless-stopped
+    networks:
+      - nginx-network
+    environment:
+      - TZ=UTC
+    labels:
+      - "com.example.description=NGINX Load Balancer with Active Health Checks"
+      - "com.example.version=1.0"
+
+networks:
+  nginx-network:
+    driver: bridge
