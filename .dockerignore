@@ -1,0 +1,10 @@
+vms/
+deployment/
+logs/
+*.md
+.git/
+.gitignore
+*.sh
+docker-compose.yml
+backend-nginx.conf
+*.bak
